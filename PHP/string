@@ -1,0 +1,73 @@
+			
+1. Entered the  two numbers and find the range between two numbers?
+Ans:- The Code For The Above Program:-
+<html>
+<body style="background-color:gray;">
+<h2> Range Between the number and the sum</h2>
+
+<?php
+$a=1;
+$b=30;
+
+echo "Enter The First Number:".$a."</br>";
+
+echo "Enter The Second Number:".$b."</br>";
+$ans=0;
+for($a=1;$a<=30;$a++)
+{
+    $ans=$ans+$a;
+}
+echo "Answer between the number is:-".$ans;
+ ?>
+</body>
+</html>
+
+The OutPut:-
+
+ 
+
+
+2. Design a php script to demonstrate all php string function in it?
+Ans:- The Code For The Above Program:-
+
+<html>
+<body style="background-color:pink;">
+<h2> String Function</h2>
+<?php
+
+      $str = "Rakesh";
+      
+      echo "<b>String Length is : </b>". strlen ("Welcome To Info-sis")."<br><br>";
+      
+      echo "<b>String is : </b>". strstr  ("Welcome To Info-sis","Info-sis")."<br><br>";
+      
+      echo "<b>String Position is : </b>". strpos  ("Welcome To Info-sis","Info-sis")."<br><br>";
+      
+      echo "<b>String change is : </b>". str_replace ("World","RKU ","Hello World ")."<br><br>";
+      
+      echo "<b>Return part of a string : </b>".substr ("RK University","6")."<br><br>";
+      
+      echo "<b>Remove character from both side :</b>".trim ($str,"Rity")."<br><br>";
+      
+      echo "<b>Remove character from right side : </b>". rtrim ($str,"University")."<br><br>";
+      
+      echo "<b>Remove character from left side : </b>".ltrim ($str,"RK")."<br><br>";
+      
+      echo "<b>String in Lower case : </b>". strtolower ("Welcome To RKU")."<br><br>";
+      
+      echo "<b>String in Upper case : </b>". strtoupper ("RK University")."<br><br>";    
+      
+      echo "<b>String all word first character is in Upper case : </b>".ucwords ("rk university");
+      
+      
+?>
+</body>
+</html>
+
+The Output:-
+ 
+
+
+
+
+

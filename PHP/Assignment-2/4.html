@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script type="text/javascript">
+		var n=parseInt(prompt("Enter the size of an array"));
+		var myArray =new Array(n);
+		
+		
+
+			function Show2ndLargeNumber()
+			{
+				for(var i=0; i<myArray.length; i++)
+			    {
+			        myArray[i]=parseInt(prompt("Enter array elements"));
+			    }
+
+			    document.write("List of Array <br><br>");
+
+			    for(var i=0; i<myArray.length; i++)
+			    {
+			        document.write(myArray[i]+"<br>");
+			    }
+
+				document.writeln("<br>SECOND LARGEST NUMBER IN AN ARRAY : "+findSecondLargeNumber(myArray));
+			}
+
+			function findSecondLargeNumber(arr)
+			{
+				
+				var fLargeNum = 0;
+				var sLargeNum = 0;
+				for(var i=0; i<arr.length; i++)
+				{
+					if(fLargeNum < arr[i])
+					{
+						sLargeNum = fLargeNum;
+						fLargeNum = arr[i];
+					}
+					else if(sLargeNum < arr[i])
+					{
+						sLargeNum = arr[i];
+					}
+				}
+					return sLargeNum;
+			}
+			 
+			
+	</script>
+</head>
+<body onload="Show2ndLargeNumber()">
+
+</body>
+</html>>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript">
+		
+	 function validate()
+
+            {
+
+                var username = document.getElementById("username").value;
+
+                var password = document.getElementById("password").value;
+
+                if ( username == "Hiren" && password == "Hiren@")
+
+                {
+
+                    alert ("Login successfully");
+
+                    window.location = "P10.html"; 
+
+                    return false;
+
+                }
+
+                else
+
+                {
+
+                    alert("Plese Enter valid Login information");
+
+                    
+                }
+
+                
+
+            }
+	</script>
+</head>
+<body>
+	<center>
+	<div style="margin-top: 200px;
+	border: solid black; border-width: 2px; background-color: yellow;">
+	<form name="frm" style="font-size: 20px; color: blue;">
+		<table border="0" style="padding: 50px;">
+			<tr>
+			<td><label for="userid">User id:</label></td>
+			<td><input type="text" name="text1" id="username"></td>
+			</tr>
+			<tr>
+			<td><label for="passid">Password:</label></td>
+			<td><input type="password" name="p1" id="password"></td>
+			</tr>
+			<tr>
+				<td rowspan="1" colspan="2"><input type="button" name="button1" value="Login" id="submit" onclick="validate()" style="margin-left: 110px;margin-top: 10px; "></td>
+			</tr>
+		</table>
+	</form>
+</div>
+</center>
+</body>
+</html>

@@ -1,0 +1,76 @@
+  div
+        {   margin-left: 150px;
+		    margin-top: 10px;
+			width:990px;
+		}
+	#wrap 
+{
+	border:1px;
+    width: 635px;
+    margin: 0px auto;
+    background-color: #fff; 
+}
+    
+        #name
+		{
+            width: 200px;
+
+		}
+  		#regno
+		{
+			width: 200px;
+		}
+        #email
+		{
+            width: 250px;
+        }
+        #mobile
+		{
+            width: 200px;
+        }
+        #amount
+		{
+            width: 200px;
+        }
+
+		#city
+		{
+			width:200px;
+		}
+		#zip
+		{
+			width:200px;
+		}
+
+        #Submit1
+		{
+            width: 100px;
+			height: 35px;
+			border-radius: 50%;
+			border-color:black;
+			background-color:#4CAF50;
+			font-size:20px;
+		}
+        #Reset1
+		{
+		    width: 100px;
+			height: 35px;
+			border-radius: 50%;
+			border-color:black;
+			background-color:#4CAF50;
+			font-size:20px;
+        }
+		body
+		{
+			background-color:DarkSalmon;
+		}
+		input,select,radio
+		{
+			background-color:Gainsboro ;
+		}
+		
+		#Submit1:hover 
+		{background-color: yellow;}
+		
+		#Reset1:hover
+		{background-color: yellow;}

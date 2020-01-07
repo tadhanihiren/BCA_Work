@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>GCD</title>
+	<script type="text/javascript">
+		function gcd() {
+			var x,y;
+			x=parseint(document.myform.n1.value);
+			y=parseint(document.myform.n2.value);
+			while(x!=y)
+			{
+				if(x>y)
+					x=x-y;
+				else
+					y=y-x;
+			}
+			document.myform.result.value=x;
+		}
+	</script>
+</head>
+<body>
+<h1 align="center">GCD</h1>
+<hr color="red">
+<center>
+	Enter Tow no:
+	<form name="myform">
+	Number1:<input type="text" name="n1" value=""><br><br>
+	Number2:<input type="text" name="n2" value=""><br><br>
+	<input type="button" name="get GCD" onclick="gcd()" value="GCD"><br><br>
+	GCD is:<input type="text" name="result" value="">
+	</form>
+</center>
+</body>
+</html>
