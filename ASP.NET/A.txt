@@ -1,0 +1,679 @@
+Custom Gridiew:-
+<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="ManageBooks.aspx.cs" Inherits="ManageBooks" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+    <center><h2>Manage Books</h2></center>
+    <asp:GridView ID="GridView1" runat="server" PageIndex="2" AutoGenerateColumns="false" DataKeyNames="Books_Id" OnRowCancelingEdit="GridView1_RowCancelingEdit" OnRowEditing="GridView1_RowEditing" OnPageIndexChanging="GridView1_PageIndexChanging" OnRowDeleting="GridView1_RowDeleting" OnRowUpdating="GridView1_RowUpdating" >
+        <Columns>
+            <asp:TemplateField HeaderText="Book Id">
+                <ItemTemplate>
+                    <asp:Label ID="Label1" runat="server" Text='<%# Eval("Books_Id") %>'></asp:Label>
+                </ItemTemplate>
+                <EditItemTemplate>
+                     <asp:Label ID="lblid" runat="server" Text='<%# Eval("Books_Id") %>'></asp:Label>
+                </EditItemTemplate>
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Name">
+                <ItemTemplate>
+                    <asp:Label ID="Label2" runat="server" Text='<%# Eval("Name") %>'></asp:Label>
+                </ItemTemplate>
+                <EditItemTemplate>
+                    <asp:TextBox ID="txtbookname" runat="server" Text='<%# Eval("Name") %>'></asp:TextBox>
+                </EditItemTemplate>
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Cover">
+                <ItemTemplate>
+                    <asp:Image ID="Image1" runat="server" Width="100px" Height="100px" ImageUrl='<%# Eval("cover") %>' />
+                </ItemTemplate>
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Author Name">
+                <ItemTemplate>
+                    <asp:Label ID="Label3" runat="server" Text='<%# Eval("auth_name") %>'></asp:Label>
+                </ItemTemplate>
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Description">
+                <ItemTemplate>
+                    <asp:Label ID="Label4" runat="server" Text='<%# Eval("desc") %>'></asp:Label>
+                </ItemTemplate>
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Price">
+                <ItemTemplate>
+                     <asp:Label ID="Label5" runat="server" Text='<%# Eval("price") %>'></asp:Label>
+                </ItemTemplate>
+                 <EditItemTemplate>
+                    <asp:TextBox ID="txtprice" runat="server" Text='<%# Eval("price") %>'></asp:TextBox>
+                </EditItemTemplate>
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Category">
+                <ItemTemplate>
+                    <asp:Label ID="Label6" runat="server" Text='<%# Eval("cat") %>'></asp:Label>
+                </ItemTemplate>
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Actions">
+                <ItemTemplate>
+                    <asp:LinkButton ID="LinkButton1" runat="server" CssClass="btn btn-success" CommandName="Edit">Edit</asp:LinkButton>
+                    <asp:LinkButton ID="LinkButton2" runat="server" CssClass="btn btn-danger" CommandName="Delete">Delete</asp:LinkButton>
+                </ItemTemplate>
+                <EditItemTemplate>
+                     <asp:LinkButton ID="LinkButton1" runat="server" CssClass="btn btn-primary" CommandName="Update">Update</asp:LinkButton>
+                    <asp:LinkButton ID="LinkButton2" runat="server" CssClass="btn btn-info" CommandName="Cancel">Cancel</asp:LinkButton>
+                </EditItemTemplate>
+            </asp:TemplateField>
+        </Columns>
+    </asp:GridView>
+    
+</asp:Content>
+
+Custom GridView:-
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data;
+using System.Data.SqlClient;
+using System.Configuration;
+
+public partial class ManageBooks : System.Web.UI.Page
+{
+    SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["myfranchiseConnectionString"].ConnectionString);
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (!IsPostBack)
+        {
+            getdata();
+        }
+    }
+    public void getdata()
+    {
+        SqlDataAdapter adpt = new SqlDataAdapter("select * from books", con);
+        DataSet ds = new DataSet();
+        adpt.Fill(ds);
+        GridView1.DataSource = ds.Tables[0];
+        GridView1.DataBind();
+    }
+
+    protected void GridView1_RowEditing(object sender, GridViewEditEventArgs e)
+    {
+        GridView1.EditIndex = e.NewEditIndex;
+        getdata();
+    }
+
+    protected void GridView1_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+    {
+        GridView1.EditIndex = -1;
+        getdata();
+    }
+
+    protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        GridView1.PageIndex = e.NewPageIndex;
+        getdata();
+    }
+
+    protected void GridView1_RowDeleting(object sender, GridViewDeleteEventArgs e)
+    {
+        Label id1 = (Label)GridView1.Rows[e.RowIndex].FindControl("lblid");
+        int id = Convert.ToInt32(id1.Text);
+        
+        SqlCommand cmd = new SqlCommand("delete from Books where id='"+id+"'", con);
+        con.Open();
+        cmd.ExecuteNonQuery();
+        con.Close();
+        getdata();
+    }
+
+    protected void GridView1_RowUpdating(object sender, GridViewUpdateEventArgs e)
+    {
+        Label id1 = (Label)GridView1.Rows[e.RowIndex].FindControl("lblid");
+        int id = Convert.ToInt32(id1.Text);
+        TextBox price = (TextBox)GridView1.Rows[e.RowIndex].FindControl("txtprice");
+        TextBox bname = (TextBox)GridView1.Rows[e.RowIndex].FindControl("txtbookname");
+
+        SqlCommand cmd = new SqlCommand("update Books set book_name='" + bname.Text + "',price='" + price.Text + "' where Id='"+id+"'", con);
+        con.Open();
+        cmd.ExecuteNonQuery();
+        con.Close();
+        getdata();
+    }
+}
+
+
+DataList:-
+
+<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="ViewOrders.aspx.cs" Inherits="ViewOrders" %>
+<%@ Register Src="~/TotalOrders.ascx" TagName="uc" TagPrefix="asp" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+    <center><h1>View Orders</h1></center>
+    <hr />
+    <div>
+
+       <!-- Sort by functionality goes here -->
+        <table>
+            <tr>
+                <td rowspan="3">Sort By :</td>
+            <td><asp:RadioButtonList ID="RadioButtonList1" runat="server">
+            <asp:ListItem>None</asp:ListItem>
+            <asp:ListItem>Dispatched</asp:ListItem>
+            <asp:ListItem>Not dispatched</asp:ListItem>
+            </asp:RadioButtonList></td>
+                <td rowspan="3">
+                    <asp:Button ID="btnserach" runat="server" Text="Search" style="background-color:deepskyblue;color:white;font-size:20px;" OnClick="btnserach_Click"/></td>
+            </tr>
+        </table>
+    </div>
+    <center>
+        <div style="float:left; padding-left:50px;">
+
+            <!-- Import TotalOrders user control here-->
+            <asp:uc runat="server" ID="id1" ></asp:uc>
+
+        </div>
+        <div style="margin:10px;">
+            <asp:DataList ID="DataList1" runat="server" RepeatDirection="Horizontal" RepeatColumns="3">
+                <ItemTemplate>
+                    <table class="table table-bordered">
+                        <tr>
+                            <td colspan="2">
+                             <center>Order Id:<asp:Label ID="Label1" runat="server" Text='<%# Eval("Id") %>'></asp:Label></center>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                             <center>Book Id:<asp:Label ID="Label2" runat="server" Text='<%# Eval("book_id") %>'></asp:Label></center> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Order Date:<asp:Label ID="Label3" runat="server" Text='<%# Eval("or_date") %>'></asp:Label>
+                            </td>
+                            <td>
+                                Deliver Date:<asp:Label ID="Label4" runat="server" Text='<%# Eval("delivery_dt") %>'></asp:Label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                             <center>   Dispated:<asp:Label ID="Label5" runat="server" Text='<%# Eval("dispatched") %>'></asp:Label></center>
+                            </td>
+                        </tr>
+                    </table>
+                </ItemTemplate>
+            </asp:DataList>
+        </div>
+    </center>
+</asp:Content>
+
+Datalist:-
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data;
+using System.Data.SqlClient;
+using System.Configuration;
+
+public partial class ViewOrders : System.Web.UI.Page
+{
+    SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["myfranchiseConnectionString"].ConnectionString);
+    string qry = "";
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (!IsPostBack)
+        {
+            //getdata();
+        }
+       
+    }
+    public void getdata()
+    {
+        SqlDataAdapter adpt = new SqlDataAdapter(qry, con);
+        DataTable dt = new DataTable();
+        adpt.Fill(dt);
+        DataList1.DataSource = dt;
+        DataList1.DataBind();
+    }
+
+
+
+    protected void btnserach_Click(object sender, EventArgs e)
+    {
+        if (RadioButtonList1.SelectedIndex == 0)
+        {
+            qry = "select * from Orders where dispatched='" + "" + "'";
+            getdata();
+        }
+        if (RadioButtonList1.SelectedIndex == 1)
+        {
+            qry = "select * from Orders where dispatched='" + "yes" + "'";
+            getdata();
+        }
+        if (RadioButtonList1.SelectedIndex == 2)
+        {
+            qry = "select * from Orders where dispatched='" + "no" + "'";
+            getdata();
+        }
+    }
+}
+
+Datalist:-
+<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" Theme="PaleGreen"  AutoEventWireup="true" CodeFile="EditProducts.aspx.cs" Inherits="EditProducts" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+    <div style="width:100%;height:50%;"><center><h3>Edit Products</h3></center></div>
+    <div class="palegreen">
+        <center>
+    <asp:DataList ID="DataList1" runat="server"  RepeatDirection="Horizontal" RepeatColumns="3" OnCancelCommand="DataList1_CancelCommand" OnDeleteCommand="DataList1_DeleteCommand" OnEditCommand="DataList1_EditCommand" OnUpdateCommand="DataList1_UpdateCommand" >
+        <ItemTemplate><center>
+            <table class="table table-bordered table-hover table-responsive" >
+                <tr>
+                    <td colspan="2" style="padding-right:10px;">
+                        <center>
+                            <asp:Label ID="lblId" runat="server" Text='<%#Eval("Id") %>'></asp:Label>
+                            <%#Eval("ProductName") %></center>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Category Id</td>
+                    <td><asp:Label ID="Label1" runat="server" Text='<%#Eval("CatId") %>'></asp:Label></td>
+                </tr>
+                <tr>
+                    <td>Description</td>
+                    <td><%#Eval("Descrip") %></td>
+                </tr>
+                <tr>
+                    <td>Total Quantity:<%#Eval("TotalQty") %></td>
+                    <td>Price:<%#Eval("Price") %></td>
+                </tr>
+                <tr >
+                    <td colspan="2">
+                        <center>
+                        <asp:LinkButton ID="LinkButton1" runat="server" CommandName="Edit">Edit</asp:LinkButton>
+                        <asp:LinkButton ID="LinkButton2" runat="server" CommandName="Delete">Delete</asp:LinkButton>
+                            </center>
+                    </td>
+                </tr>
+            </table></center>
+        </ItemTemplate>
+       
+        <EditItemTemplate><center>
+             <table class="table table-bordered table-hover table-responsive" >
+                 <tr>
+                    <td colspan="2" style="padding-right:10px;">
+                        <center><asp:Label ID="lblId1" runat="server" Text='<%#Eval("Id") %>'></asp:Label>
+                            <asp:TextBox runat="server" Id="txtName" Text='<%#Eval("ProductName") %>'></asp:TextBox></center>
+                    </td>
+                </tr>
+
+                 <tr>
+                    <td>Category Id</td>
+                    <td><asp:TextBox runat="server" Id="txtCatId" Text='<%#Eval("CatId") %>'></asp:TextBox></td>
+                </tr>
+
+                 <tr>
+                    <td>Description</td>
+                    <td><asp:TextBox runat="server" Id="txtDescip" Text='<%#Eval("Descrip") %>'></asp:TextBox></td>
+                </tr>
+                <tr>
+                    <td>Total Quantity:<asp:TextBox runat="server" Id="txtQty" Text='<%#Eval("TotalQty") %>'></asp:TextBox></td>
+                    <td>Price:<asp:TextBox runat="server" Id="txtPrice" Text='<%#Eval("Price") %>'></asp:TextBox></td>
+                </tr>
+                <tr >
+                    <td colspan="2">
+                        <center>
+                        <asp:LinkButton ID="LinkButton1" runat="server" CommandName="Update">Update</asp:LinkButton>
+                        <asp:LinkButton ID="LinkButton2" runat="server" CommandName="Cancel">Cancel</asp:LinkButton>
+                            </center>
+                    </td>
+                </tr>
+
+             </table>
+            </center>
+        </EditItemTemplate>
+
+        <SeparatorTemplate>
+            <h4 class="item"></h4>
+        </SeparatorTemplate>
+        
+    </asp:DataList>
+        </center>
+    </div>
+</asp:Content>
+
+Code For datalist:-
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data.Sql;
+using System.Data;
+using System.Data.SqlClient;
+using System.Configuration;
+
+public partial class EditProducts : System.Web.UI.Page
+{
+    SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (!IsPostBack)
+        {
+            SqlDataAdapter adpt = new SqlDataAdapter("select * from Products", con);
+            DataTable dt = new DataTable();
+            adpt.Fill(dt);
+            DataList1.DataSource = dt;
+            DataList1.DataBind();
+        }
+    }
+
+    protected void DataList1_EditCommand(object source, DataListCommandEventArgs e)
+    {
+        DataList1.EditItemIndex = e.Item.ItemIndex;
+    }
+
+    protected void DataList1_UpdateCommand(object source, DataListCommandEventArgs e)
+    {
+        Label lbl = (Label)DataList1.Items[e.Item.ItemIndex].FindControl("lblId1");
+        int id = Convert.ToInt32(lbl.Text);
+        TextBox pname = (TextBox)DataList1.Items[e.Item.ItemIndex].FindControl("txtName");
+        TextBox cid = (TextBox)DataList1.Items[e.Item.ItemIndex].FindControl("txtCatId");
+        TextBox desc = (TextBox)DataList1.Items[e.Item.ItemIndex].FindControl("txtDescip");
+        TextBox qty = (TextBox)DataList1.Items[e.Item.ItemIndex].FindControl("txtQty");
+        TextBox price = (TextBox)DataList1.Items[e.Item.ItemIndex].FindControl("txtPrice");
+
+        SqlCommand cmd = new SqlCommand("update Products set ProductName='"+pname.Text+ "',CatID='" + cid.Text + "',Descrip='" + desc.Text + "',TotalQty='" + qty.Text + "',Price='" + price.Text + "' where id ='"+id+"'", con);
+        con.Open();
+        cmd.ExecuteNonQuery();
+        con.Close();
+    }
+
+    protected void DataList1_CancelCommand(object source, DataListCommandEventArgs e)
+    {
+        DataList1.EditItemIndex = -1;       
+    }
+
+    protected void DataList1_DeleteCommand(object source, DataListCommandEventArgs e)
+    {
+        Label lbl = (Label)DataList1.Items[e.Item.ItemIndex].FindControl("lblId");
+        int id = Convert.ToInt32(lbl.Text);
+
+        SqlCommand cmd = new SqlCommand("delete from Products where id='" + id + "'", con);
+        con.Open();
+        cmd.ExecuteNonQuery();
+        con.Close();
+    }
+}
+
+
+Login:-
+<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Login.aspx.cs" Inherits="Login" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <title></title>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div style="width: 100%; height: 180px;">
+            <asp:Image ID="Image1" runat="server" ImageUrl="~/img/header.jpg" Width="100%" Height="180px" />
+        </div>
+        <div style="width: 450px; margin: auto; margin-top:20px; border-radius:5px; padding: 15px; background-color:gainsboro; height: 350px; text-align: center;">
+            <h3><center>Login</center></h3>
+            <hr />
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <asp:TextBox ID="txtusername" runat="server" class="form-control"></asp:TextBox>
+            </div>
+            <div class="form-group">
+                <label for="pwd">Password:</label>
+                <asp:TextBox ID="txtpassword" runat="server" class="form-control"></asp:TextBox>
+            </div>
+            <asp:Button ID="Button1" runat="server" Text="Login" Class="btn btn-primary" OnClick="Button1_Click" />
+        </div>
+
+    </form>
+</body>
+</html>
+
+AddBooks:-
+<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="AddBooks.aspx.cs" Inherits="Books" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+    <center>Welcome, <asp:Label ID="lblusername" runat="server" Text="Label"></asp:Label></center>
+    <center><h2>Book Entry</h2></center>
+    <hr />
+    <div style="width: 600px; margin: auto; float:left;">
+        <table width="100%">
+            <tr>
+                <td style="text-align: right;">Book Name:
+                </td>
+                <td>
+                    <asp:TextBox ID="txtbookname" runat="server" CssClass="form-control"></asp:TextBox>
+                    <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ErrorMessage="Please enter the book name" ControlToValidate="txtbookname"></asp:RequiredFieldValidator>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <asp:FileUpload ID="FileUpload1" runat="server" />
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <asp:Button ID="btnupload" runat="server" Text="Upload" OnClick="btnupload_Click"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right;">Cover Preivew:</td>
+                <td>
+                    <asp:Image ID="Image1" runat="server" Width="100px" Height="100px" />
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right;">Author Name:
+                </td>
+                <td>
+                    <asp:TextBox ID="txtauthor" runat="server" CssClass="form-control"></asp:TextBox>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right;">Description:
+                </td>
+                <td>
+                    <asp:TextBox ID="txtdesc" runat="server" CssClass="form-control"></asp:TextBox>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right;">Price:
+                </td>
+                <td>
+                    <asp:TextBox ID="txtprice" runat="server" CssClass="form-control"></asp:TextBox>
+                    <asp:RangeValidator ID="RangeValidator1" runat="server" ErrorMessage="please enter range between 200 to 1000" ControlToValidate="txtprice" MaximumValue="200" MinimumValue="1000"></asp:RangeValidator>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right;">Category:
+                </td>
+                <td>
+                    <asp:DropDownList ID="ddlcat" runat="server">
+                        <asp:ListItem>Technology</asp:ListItem>
+                        <asp:ListItem>Novels</asp:ListItem>
+                        <asp:ListItem>Journals</asp:ListItem>
+                    </asp:DropDownList>
+                    <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage="RequiredFieldValidator" ControlToValidate="ddlcat"></asp:RequiredFieldValidator>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <asp:Button ID="btnsubmit" CssClass="btn btn-primary" runat="server" Text="Submit"></asp:Button>
+                </td>
+            </tr>
+
+
+        </table>
+    </div>
+    <div style="width:200px;float:right;margin:auto;margin-right:125px;">
+        <asp:AdRotator ID="AdRotator1" runat="server" Width="250px" Height="250px" AdvertisementFile="~/XMLFile.xml" />
+    </div>
+</asp:Content>
+
+
+AddBooks.ascs:-
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data.SqlClient;
+
+public partial class Books : System.Web.UI.Page
+{
+    SqlConnection con = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=F:\Asp.net\TSEE Supplied Folder\TSEE Supplied Folder\Tsee Source Code\App_Data\LMS.mdf;Integrated Security=True");
+    static string path = "";
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (Session["username"]!=null)
+        {
+            lblusername.Text = Session["username"].ToString();
+            lblusername.Text=Response.Cookies["mycookie"].Value;
+        }
+       
+    }
+
+    protected void btnupload_Click(object sender, EventArgs e)
+    {
+        if (FileUpload1.HasFile)
+        {
+            if (FileUpload1.PostedFile.ContentType == "image/jpeg" || FileUpload1.PostedFile.ContentType == "image/png")
+            {
+                FileUpload1.SaveAs(Server.MapPath("~/img/" + FileUpload1.FileName));
+                path = "~/img/" + FileUpload1.FileName;
+                Image1.ImageUrl = path;
+            }
+        }
+    }
+
+    protected void btnsubmit_Click(object sender, EventArgs e)
+    {
+        SqlCommand cmd = new SqlCommand("insert into Books values(@book_name,@cover_preview,@author_name,@desc,@price,@category)", con);
+        cmd.Parameters.AddWithValue("@book_name",txtbookname.Text);
+        cmd.Parameters.AddWithValue("@cover_preview",path);
+        cmd.Parameters.AddWithValue("@author_name",txtauthor);
+        cmd.Parameters.AddWithValue("@desc",txtdesc);
+        cmd.Parameters.AddWithValue("@price",txtprice);
+        cmd.Parameters.AddWithValue("@category",ddlcat.SelectedItem.ToString());
+
+        con.Open();
+        cmd.ExecuteNonQuery();
+        con.Close();                
+    }
+}
+
+User Control:-
+<%@ Control Language="C#" AutoEventWireup="true" CodeFile="TotalOrders.ascx.cs" Inherits="TotalBooks" %>
+<div>
+    <h3>Total Orders</h3><br />
+    <asp:Label ID="Label1" runat="server" Text="0" CssClass="text-primary" Font-Bold="True" Font-Size="XX-Large"></asp:Label>
+</div>
+Usercontrol.ascs:-
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data;
+using System.Data.SqlClient;
+using System.Configuration;
+
+public partial class TotalBooks : System.Web.UI.UserControl
+{
+    SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["myfranchiseConnectionString"].ConnectionString);
+    protected void Page_Load(object sender, EventArgs e)
+    {
+            gettotalbooks();
+        
+    }
+    public void gettotalbooks()
+    {
+        SqlDataAdapter adpt = new SqlDataAdapter("select count(Id) total from orders", con);
+        DataSet ds = new DataSet();
+        adpt.Fill(ds);
+        Label1.Text = ds.Tables[0].Rows[0]["total"].ToString();
+    }
+}
+
+Global Page:-
+<%@ Application Language="C#" %>
+ 
+<script runat="server">
+    public int counter;
+    void Application_Start(object sender, EventArgs e)
+    {
+        // Code that runs on application startup
+        Application["visitor"] = 0;
+
+    }
+
+    void Application_End(object sender, EventArgs e)
+    {
+        //  Code that runs on application shutdown
+
+    }
+
+    void Application_Error(object sender, EventArgs e)
+    {
+        // Code that runs when an unhandled error occurs
+
+    }
+
+    void Session_Start(object sender, EventArgs e)
+    {
+        // Code that runs when a new session is started
+        counter = Convert.ToInt32(Application["visitor"]);
+        counter += 1;
+        Label lbl = (Label)MasterPage.FindControl("ttlvisitors");
+        lbl.Text = counter.ToString();
+    }
+
+    void Session_End(object sender, EventArgs e)
+    {
+        // Code that runs when a session ends. 
+        // Note: The Session_End event is raised only when the sessionstate mode
+        // is set to InProc in the Web.config file. If session mode is set to StateServer 
+        // or SQLServer, the event is not raised.
+
+    }
+
+</script>
+
+ Welcome,
+                <asp:Label ID="lbluser" runat="server" Text=""></asp:Label>
+                <br />
+                Total Visitors: <asp:Label ID="ttlvisitors" runat="server" Text=""></asp:Label>
+MasterPage:-
+ lbluser.Text = HttpCookie("user").Value.ToString();
+
+
+

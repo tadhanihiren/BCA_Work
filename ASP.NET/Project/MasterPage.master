@@ -1,0 +1,47 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
+
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <title></title>
+    <link href="css/Mystyle.css" rel="stylesheet" />
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div style="width: 100%; height: 120px;">
+            <asp:Image ID="Image1" runat="server" ImageUrl="~/img/header.jpg" Width="100%" Height="120px" />
+        </div>
+        <h1>
+        <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
+            </h1>
+        <div style="width: 600px; margin: auto; padding-left: 50px; margin-top: 5px;">
+            <asp:Menu ID="Menu1" runat="server" Orientation="Horizontal">
+                <Items>
+                    <asp:MenuItem Text="Books Entry" NavigateUrl="~/AddBooks.aspx">
+                        <asp:MenuItem Text="Add Books" NavigateUrl="~/AddBooks.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Manage Books" NavigateUrl="~/ManageBooks.aspx"></asp:MenuItem>
+                    </asp:MenuItem>
+                    <asp:MenuItem Text="View Orders" NavigateUrl="~/ViewOrders.aspx"></asp:MenuItem>
+                </Items>
+                <LevelMenuItemStyles>
+                    <asp:MenuItemStyle CssClass="menu" />
+                    <asp:MenuItemStyle CssClass="submenu" />
+                </LevelMenuItemStyles>
+            </asp:Menu>
+            <div style="float:right;margin-top:0px;position:absolute; top:128px;right:200px;">
+               <!-- Logout button goes here -->
+                <asp:Button ID="btnlogout" runat="server" Text="Logout" BackColor ="#ff3300" ForeColor="White" OnClick="btnlogout_Click"/>
+            </div>
+        </div>
+        <hr />
+        <div style="width: 100%;">
+            <center>
+                <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
+            </center>
+        </div>
+    </form>
+</body>
+</html>
